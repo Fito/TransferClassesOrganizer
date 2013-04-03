@@ -12,9 +12,6 @@ class User():
 	def add_desired_major(self, major, desired_school):
 		self.majors.append(major + '-' + desired_school)
 	
-	def change_name(self, name):
-		self.name = name
-	
 	def change_password(self, old_password, new_password):
 		if self.password == old_password:
 			self.password = new_password
