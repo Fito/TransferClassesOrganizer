@@ -1,77 +1,86 @@
 import requests
 import re
 
+def extract_groups(html_response, groups = []):
+	response = str(html_response)
+	group = re.findall(r'([\s]?[-]+[\s]*<[Bb]\s?>[\s\S]*?)[\s]+[-]+[\s]+<[Bb]\s?>', response)
+	if (len(group) > 0):		
+		groups.append({ 'title' : extract_title(group[0]), 'raw content' : group[0] })
+		response = response.replace(str(group[0]), '')
+		extract_groups(response, groups)
+	return(groups)
+
+def extract_courses(group, courses = []):
+	courses = re.findall(r'\|([A-Z]+\s\d+[A-Z]?)', str(group))
+	return(courses)
+
+def extract_title(group):
+	title = re.findall(r'[\s]?[-]+[\s]+<[Bb]\s?>([\s\S]*?)</[Bb]\s?>', group)
+	return(title[0].rstrip().lstrip())
+
+
 class AssistNinja():
 	"""Connects to assist.org, retrieves reports 
 	   and parses them out for you"""
 	
 	base_url = 'http://web1.assist.org/cgi-bin/REPORT_2/Rep2.pl'
 	extra_params = '&dir=1&&sidebar=false&rinst=left&mver=2&kind=5&dt=2'
-
-	# major = 'EECS'
-	# year = '12-13'
-	# t_to = 'UCB'
-	# t_from = 'BERKELEY'
 	
 	def __init__(self):
-		self.reports = []
-		self.t_from = ''
-		self.t_to = ''
-		self.major = ''
-		self.year = ''
-	
-	def set_mission_info(self, transfer_from, transfer_to, major, year):
-		self.t_from = transfer_from
-		self.t_to = transfer_to
-		self.major = major
-		self.year = year
-	
-	def fetch_report(self):
-		if (self.t_from):
-			major_params = '?aay=' + self.year + '&dora=' + self.major
-			transfer_from_params = '&agreement=aa&sia=' + self.t_from + '&ia=' + self.t_from
-			transter_to_params = '&oia=' + self.t_to + '&ay=' + self.year + '&event=19&ria=' + self.t_to
-			request = requests.get(base_url + major_params + transfer_to_params + transfer_from_params + extra_params)
-			self.reports.append(request.text)
-		else:
-			print('You need to give your ninja information about the report you want.')
-			print('Use #set_mission_info(transfer_from, transfer_to, major, year)\n')
+		self.reports = {}
+		self.missions = []
 
-def extract_group(html_response, groups = []):
-	response = str(html_response)
-	group = re.findall(r'([\s]?[-]+[\s]*<[Bb]\s?>[\s\S]*?)[\s]+[-]+[\s]+<[Bb]\s?>', response)
-	if (len(group) > 0):
-		groups.append(group[0])
-		response = response.replace(str(group[0]), '')
-		extract_group(response, groups)
-	return(groups)
-
-def extract_courses(group, courses = []):
-	courses = re.findall(r'\|([A-Z]+\s\d+[A-Z]?)', str(group))
-	return(courses)
+	# example attributes: 
+	# major = 'EECS'
+	# year = '12-13'
+	# transfer_to = 'UCB'
+	# transfer_from = 'BERKELEY'
 	
-def extract_title(group):
-	title = re.findall(r'[\s]?[-]+[\s]+<[Bb]\s?>([\s\S]*?)</[Bb]\s?>', group)
-	return(title[0].rstrip().lstrip())
+	def fetch_report(self, transfer_from, transfer_to, major, year):
+			self.missions.append({ 'transfer_from' : transfer_from, 'transfer_to' : transfer_to, 'major' : major, 'year' : year })
+			request = requests.get(self.build_url(transfer_from, transfer_to, major, year))
+			self.reports[major + '-' + transfer_to] = { 'raw request' : request.text }
+			return request.text
 	
-# major = 'EECS'
-# year = '12-13'
-# t_to = 'UCB'
-# t_from = 'BERKELEY'
-# base_url = 'http://web1.assist.org/cgi-bin/REPORT_2/Rep2.pl'
-# extra_params = '&dir=1&&sidebar=false&rinst=left&mver=2&kind=5&dt=2'
-# 
-# 
-# url = base_url + '?aay=' + year + '&dora=' + major + '&oia=' + t_to + '&ay=' + year + '&event=19&ria=' + t_to + '&agreement=aa&sia=' + t_from + '&ia=' + t_from + extra_params
-# request = requests.get(url)
+			
+	def build_url(self, transfer_from, transfer_to, major, year):
+		major_params = '?aay=' + year + '&dora=' + major
+		transfer_from_params = '&agreement=aa&sia=' + transfer_from + '&ia=' + transfer_from
+		transfer_to_params = '&oia=' + transfer_to + '&ay=' + year + '&event=19&ria=' + transfer_to
+		return self.base_url + major_params + transfer_to_params + transfer_from_params + self.extra_params
+	
+	
+	def extract_report_groups(self):
+		for report in self.reports.keys():
+			self.reports[report]['groups'] = extract_groups(self.reports[report]['raw request'])
+	
+	
+	def extract_report_courses_and_titles(self):
+		for report in self.reports.keys():
+			self.reports[report]['all_courses'] = []
+			for group in self.reports[report]['groups']:
+				courses = extract_courses(group)
+				group['courses'] = courses
+				self.reports[report]['all_courses'] += courses 		
+	
+	
+	def courses_for(self, major, transfer_to):
+		return self.reports[major + '-' + transfer_to]['all_courses']
+	
+	def groups_for(self, major, transfer_to):
+		return self.reports[major + '-' + transfer_to]['groups']
 
-# groups = extract_group(request.text)
-# 
-# for group in groups:
-# 	print extract_title(group)
-# 	for course in extract_courses(group):
-# 		print course
-
-ninja = AssistNinja()
-ninja.set_mission_info('BERKELEY', 'UCB', 'EECS', '12-13')
-ninja.fetch_report()
+# reports dictionary example:
+#	
+# reports = { 'EECS-UCB' : { 	'raw request'  : '<html>The request response</html>',
+#															 	  'groups'   : [
+#																							 	{'title'      : 'Group 1', 
+#															 						      'raw content' : '<div>Group 1 ... </div>',
+#																						    'courses'     : ['CRS1A']},
+#																							 	{'title' 	    : 'Group 2', 
+#															 						  	  'raw content' : '<div>Group 2 ... </div>',
+#																							  'courses'     : ['CRS1B']}
+#																				 		  ]
+#															'all_courses' : ['CRS1A', 'CRS1B']
+#														} 
+#						} 
