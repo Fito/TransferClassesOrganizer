@@ -40,7 +40,9 @@ class AssistNinja():
 			self.missions.append({ 'transfer_from' : transfer_from, 'transfer_to' : transfer_to, 'major' : major, 'year' : year })
 			request = requests.get(self.build_url(transfer_from, transfer_to, major, year))
 			self.reports[major + '-' + transfer_to] = { 'raw request' : request.text }
-			return request.text
+			report = self.reports[major + '-' + transfer_to]
+			self.extract_reports_data()
+			return report
 	
 			
 	def build_url(self, transfer_from, transfer_to, major, year):
@@ -50,16 +52,16 @@ class AssistNinja():
 		return self.base_url + major_params + transfer_to_params + transfer_from_params + self.extra_params
 	
 	
-	def extract_report_groups(self):
+	def extract_reports_groups(self):
 		for report in self.reports.keys():
 			self.reports[report]['groups'] = extract_groups(self.reports[report]['raw request'])
 	
 	
-	def extract_report_courses_and_titles(self):
+	def extract_reports_courses_and_titles(self):
 		for report in self.reports.keys():
 			self.reports[report]['all_courses'] = []
 			for group in self.reports[report]['groups']:
-				courses = extract_courses(group)
+				courses = extract_courses(group['raw content'])
 				group['courses'] = courses
 				self.reports[report]['all_courses'] += courses 		
 	
@@ -69,6 +71,10 @@ class AssistNinja():
 	
 	def groups_for(self, major, transfer_to):
 		return self.reports[major + '-' + transfer_to]['groups']
+	
+	def extract_reports_data(self):
+		self.extract_reports_groups()
+		self.extract_reports_courses_and_titles()
 
 # reports dictionary example:
 #	
