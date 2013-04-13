@@ -1,5 +1,5 @@
 majors = {
-	"Electical Engineering and Computer Science" : "EECS",
+	"Electrical Engineering and Computer Science" : "EECS",
 	"Biochemical Engineering"                    : "ENG.CHEM.BIO.B.S."
 }
 
@@ -9,13 +9,19 @@ universities = {
 }
 
 class Major():
-	def __init__(self, name, school, assist_code, school_code):
+	def __init__(self, name, school):
 		self.name = name
 		self.school = school
-		self.assist_code = assist_code
-		self.classes_required = []
-		self.school_code = school_code
+		self.code = majors[name]
+		self.school_code = universities[school]
+		self.courses_required = {}
 	
-	def add_required_classes(classes):
-		self.classes_required += classes
+	def add_required_courses(self, transfer_from, courses_groups):
+		courses = []
+		for group in courses_groups:
+			if len(group['courses']):
+				courses.append({ group['title'] : group['courses'] })
+		
+		self.courses_required[transfer_from] = courses
+
 

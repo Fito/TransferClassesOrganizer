@@ -37,7 +37,9 @@ class AssistNinja():
 	# transfer_from = 'BERKELEY'
 	
 	def fetch_report(self, transfer_from, transfer_to, major, year):
-			self.missions.append({ 'transfer_from' : transfer_from, 'transfer_to' : transfer_to, 'major' : major, 'year' : year })
+			mission = { 'transfer_from' : transfer_from, 'transfer_to' : transfer_to, 'major' : major, 'year' : year }
+			# add logic to prevent duplication of missions that deliver the same report
+			self.missions.append(mission)
 			request = requests.get(self.build_url(transfer_from, transfer_to, major, year))
 			self.reports[major + '-' + transfer_to] = { 'raw request' : request.text }
 			report = self.reports[major + '-' + transfer_to]

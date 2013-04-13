@@ -1,1 +1,0 @@
-from assist_ninja import *
