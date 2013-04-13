@@ -63,6 +63,11 @@ def add_major_handler(user, form):
 	inform_user_action(info_area, "Information successfully retrieved.")
 	form.frame.pack_forget()
 
+def render_information_table(table):
+	for school in user.current_schools:
+		table.add_sub_frame(school)
+		table.add_list(school, "Classes you have taken:", ["MATH3A", "MATH3B", "ENG1A"], True)
+
 current_table = InformationTable(m.frame, "Current School:", TOP)
 if not len(user.current_schools):
 	add_school_form = FormFrame(current_table.frame)
@@ -85,8 +90,6 @@ if not len(user.majors):
 # transfer_table.add_sub_frame("UC Davis")
 # transfer_table.add_list("UC Davis", "Classes you need to take:", ["MATH3C", "MATH3F", "ENG1B", "ECON1A"], False)
 # 
-# current_table.add_sub_frame("Laney")
-# current_table.add_list("Laney", "Classes you have taken:", ["MATH3A", "MATH3B", "ENG1A"], True)
 # listeners = [transfer_table.lists["UC Berkeley"], transfer_table.lists["UC Davis"]]
 # current_table.add_form("Add class", "Add", current_table.lists["Laney"], listeners)
 

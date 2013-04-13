@@ -18,7 +18,8 @@ class MainWindow():
 
 class ListFrame():
 	""" List Frame: Wrapper class for Tk frames that hold a title and a list. 
-	The constructor's only parameter is a parent frame """
+			The constructor's parameters are a parent frame, a title, an items list
+	 		and a boolean to determine the use of a delete button """
 
 	def __init__(self, parent, title, items_list, delete_button=True):
 		frame = self.frame = Frame(parent, bd=1, relief=RAISED, padx=5, pady=5)
@@ -64,7 +65,7 @@ class ListFrame():
 	
 class FormFrame():
 	"""	Form Frame: Wrapper class for Tk frames that let the user input
-			infromation throgh a form with labels and text fields. The constructor's
+			information through a form with labels and text fields. The constructor's
 			only parameter is a parent frame"""
 
 	def __init__(self, parent):
@@ -83,29 +84,12 @@ class FormFrame():
 	def add_button(self, title, action):
 		Button(self.frame, text=title, command=action).pack(padx=5, pady=5)
 	
-		
-class DialogWindow():
-	"""	Dialog Window: Wrapper class for Tk Toplevel objects that display
-	 		a window for interacting with the user. The constructor's parameters
-	 		are a parent frame and a title"""
-
-	def __init__(self, parent, title):
-		top = self.top = Toplevel(parent)
-		top.title(title)
-		Label(top, text="Value").pack()
-
-		self.e = Entry(top)
-		self.e.pack(padx=5)
-		
-		b = Button(top, text="Ok", command=self.ok)
-		b.pack(pady=5)
-		
-	def ok(self):
-		print("Value is: ", self.e.get())
-		self.top.destroy()
-	
 
 class InformationTable():
+	""" Information Table: Wrapper class for ListFrame and FormFrame classes.
+			It makes it easier to organize multiple lists inside of a frame
+			and add froms that relate these lists to other lists """
+			
 	def __init__(self, parent, title, position):
 		self.frame = Frame(parent)
 		self.title = Label(self.frame, text=title, font=('Arial', 24, 'bold'))
