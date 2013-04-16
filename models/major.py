@@ -20,8 +20,13 @@ class Major():
 		courses = []
 		for group in courses_groups:
 			if len(group['courses']):
-				courses.append({ group['title'] : group['courses'] })
-		
+				courses.append({ group['title'] : group['courses'] })		
 		self.courses_required[transfer_from] = courses
+	
+	def courses_required_from(self, school):
+		if school in self.courses_required:
+			return self.courses_required[school]
+		else:
+			return []
 
 
