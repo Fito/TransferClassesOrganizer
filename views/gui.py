@@ -25,7 +25,7 @@ class ListFrame():
 		frame = self.frame = Frame(parent, bd=2, relief='ridge', padx=5, pady=5)
 		
 		self.items_list = items_list
-		self.list_box = Listbox(self.frame, width=20, height=len(self.items_list), relief='ridge')
+		self.list_box = Listbox(self.frame, width=20, height=len(self.items_list), relief=GROOVE)
 		
 		self.title = Label(self.frame, text=title).pack(padx=10, pady=5)
 		self.populate_list(self.items_list).pack(padx=10, pady=5)

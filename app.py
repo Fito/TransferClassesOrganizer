@@ -11,31 +11,38 @@ from models.user import *
 from lib.assist_ninja import *
 from views.gui import *
 
+# create AssistNinja object
 ninja = AssistNinja()
+# create User object
 user = User()
-# user.add_current_school("Laney")
-# user.add_class_taken("Laney", "MATH 3A")
-# user.add_class_taken("Laney", "MATH 3B")
-
+# create Tkinter's root
 root = Tk()
+
+# create MainWindow object, which is nested into root
 m = MainWindow(root)
 m.frame.pack(padx=10, pady=20)
 root.title("Transfer Classes Organizer")
+
+#create an info area, to keep the user informed of processes and errors
 info_area = Label(m.frame, text='')
 info_area.pack(side=TOP, fill=X)
 
 def clear_info_area():
+	# Clears the info area
 	info_area.config(text="")
 
-def inform_user_error(label, content):
-	label.config(text=content, font=("Arial", 18), fg='red')
+def inform_user_error(content):
+	# Informs displays a message on the info area, in color red
+	info_area.config(text=content, font=("Arial", 18, 'bold'), fg='red')
 	root.update()
 
-def inform_user_action(label, content):
-	label.config(text=content, font=("Arial", 18), fg='green')
+def inform_user_action(content):
+	# Informs displays a message on the info area, in color green
+	info_area.config(text=content, font=("Arial", 18, 'bold'), fg='green')
 	root.update()
 
 def fetch_majors_info(user):
+	# Triggers our assist ninja object to fetch majors' information 
 	for school in user.current_schools_codes:
 		for major in user.majors:
 			ninja.fetch_report(school, major.school_code, major.code, '12-13')
@@ -43,7 +50,8 @@ def fetch_majors_info(user):
 			major.add_required_courses(school, classes)
 
 def add_class(school, classes_taken_list, form, classes_required_lists):
-	item = form.entries[0].get()
+	# Adds a class both to the user and the classes list, when the 'Add' button is pressed
+	item = form.entries[0].get().upper()
 	for classes_list in classes_required_lists:
 		classes_list.delete_item(item)
 	
@@ -51,10 +59,9 @@ def add_class(school, classes_taken_list, form, classes_required_lists):
 	user.add_class_taken(school, item)
 
 def render_classes_taken_table(table):
-	print "classes taken table rendered"
-	#erase list and re render with updated bindings
+	#Erases the list and re renders with updated bindings
 	if len(table.winfo_children()) > 1:
-		for w in table.winfo_children()[1].winfo_children():
+		for w in table.winfo_children():
 			w.pack_forget()
 			
 	school = user.current_schools[0]
@@ -66,13 +73,12 @@ def render_classes_taken_table(table):
 	clear_info_area()
 
 	if not user.has_majors():
-		print "No majors, so no bindings"
 		form = FormFrame(list_frame.frame)
 		form.add_field("Add class:")
 		form.add_button("Add", lambda : add_class(school, list_frame, form, []))
 		form.pack()
 	
-	return list_frame.frame
+	return list_frame
 
 def render_classes_required_table(parent_table, classes_taken_frame):
 	for school_code in user.current_schools_codes:
@@ -98,9 +104,9 @@ def render_classes_required_table(parent_table, classes_taken_frame):
 		
 		# adding the 'add class' form
 		classes_taken_list = render_classes_taken_table(classes_taken_frame)
-		form = FormFrame(classes_taken_list)
+		form = FormFrame(classes_taken_list.frame)
 		form.add_field("Add class:")
-		form.add_button("Add", lambda : add_class(school, classes_taken_list, form, classes_required_lists))
+		form.add_button("Add", lambda : add_class(classes_taken_list.title, classes_taken_list, form, classes_required_lists))
 		form.pack()
 	clear_info_area()
 
@@ -115,19 +121,19 @@ def add_major_handler(form, form_parent, classes_taken_frame):
 	clear_info_area()
 	# Error Handling
 	if not len(user.current_schools):
-		inform_user_error(info_area, "You need to add a current school first")
+		inform_user_error("You need to add a current school first")
 		return
 	name = form.entries[0].get()
 	school = form.entries[1].get()
 	user.add_major(Major(name, school))
-	inform_user_action(info_area, "Fetching information from assist.org...")
+	inform_user_action("Fetching information from assist.org...")
 	#Ask assist Ninja for report
 	try:
 		fetch_majors_info(user)
 	except Exception:
-		inform_user_error(info_area, "Unable to connect, please check internet connection.")
+		inform_user_error("Unable to connect, please check internet connection.")
 		return
-	inform_user_action(info_area, "Information successfully retrieved.")
+	inform_user_action("Information successfully retrieved.")
 	form.frame.pack_forget()
 	render_classes_required_table(form_parent, classes_taken_frame)
 
@@ -159,11 +165,6 @@ else:
 	add_major_form.frame.pack(side=TOP, fill=X)
 
 root.mainloop()
-
-
-
-
-
 
 
 

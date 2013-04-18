@@ -1,6 +1,6 @@
 majors = {
 	"Electrical Engineering and Computer Science" : "EECS",
-	"Biochemical Engineering"                    : "ENG.CHEM.BIO.B.S."
+	"Biochemical Engineering"                    	: "ENG.CHEM.BIO.B.S."
 }
 
 universities = {
