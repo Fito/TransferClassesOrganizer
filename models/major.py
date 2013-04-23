@@ -8,9 +8,6 @@ universities = {
 	"UC Davis"    : "UCD"
 }
 
-def remove_values_from_list(the_list, val):
-   return [value for value in the_list if value != val]
-
 class Major():
 	def __init__(self, name, school):
 		self.name = name

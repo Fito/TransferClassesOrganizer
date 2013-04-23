@@ -40,7 +40,6 @@ is at <http://python-requests.org>.
 :license: Apache 2.0, see LICENSE for more details.
 
 """
-print "I was imported!"
 
 __title__ = 'requests'
 __version__ = '1.1.0'
