@@ -21,7 +21,7 @@ class ListFrame():
 			The constructor's parameters are a parent frame, a title, an items list
 	 		and a boolean to determine the use of a delete button """
 
-	def __init__(self, parent, title, items_list, delete_button=True):
+	def __init__(self, parent, title, items_list):
 		frame = self.frame = Frame(parent, bd=2, relief='ridge', padx=5, pady=5)
 		
 		self.items_list = items_list
@@ -30,8 +30,6 @@ class ListFrame():
 		self.title = Label(self.frame, text=title).pack(padx=10, pady=5)
 		self.populate_list(self.items_list).pack(padx=10, pady=5)
 
-		if delete_button:
-			Button(self.frame, text="Delete selected", command=self.delete_selected_item).pack()
 		
 	def populate_list(self, items_list):
 		self.list_box.delete(0, END)
@@ -45,7 +43,10 @@ class ListFrame():
 			current = int(self.list_box.curselection()[0])
 			self.items_list = remove_values_from_list(self.items_list, self.items_list[current])
 			self.list_box.delete(current)
-			self.populate_list(self.items_list)	
+			self.populate_list(self.items_list)
+	
+	def current_selection(self):
+		return self.items_list[int(self.list_box.curselection()[0])]
 	
 	def pack(self):
 		self.frame.pack(padx=10, pady=10)

@@ -8,6 +8,9 @@ universities = {
 	"UC Davis"    : "UCD"
 }
 
+def remove_values_from_list(the_list, val):
+   return [value for value in the_list if value != val]
+
 class Major():
 	def __init__(self, name, school):
 		self.name = name
@@ -20,7 +23,7 @@ class Major():
 		courses = []
 		for group in courses_groups:
 			if len(group['courses']):
-				courses.append({ group['title'] : group['courses'] })		
+				courses.append({ group['title'] : group['courses'] })
 		self.courses_required[transfer_from] = courses
 	
 	def courses_required_from(self, school):
@@ -28,5 +31,11 @@ class Major():
 			return self.courses_required[school]
 		else:
 			return []
+	
+			
+
+
+
+
 
 

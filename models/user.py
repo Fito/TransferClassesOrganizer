@@ -5,6 +5,10 @@ schools = {
 	"Diablo Valley College" : "DIABLO"
 }
 
+def remove_values_from_list(the_list, val):
+   return [value for value in the_list if value != val]
+
+
 class User():
 	def __init__(self):
 		self.current_schools = []
@@ -31,6 +35,10 @@ class User():
 		else:
 			self.classes_taken[school] = [course]
 	
+	def remove_class_taken(self, course):
+		for school in self.classes_taken.keys():
+			self.classes_taken[school] = remove_values_from_list(self.classes_taken[school], course)
+			
 	def courses_taken(self, school_or_code):
 		#school code provided
 		if school_or_code in self.current_schools_codes:

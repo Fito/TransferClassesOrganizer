@@ -78,6 +78,7 @@ class AssistNinja():
 		self.extract_reports_groups()
 		self.extract_reports_courses_and_titles()
 
+AssistNinja().fetch_report('BERKELEY', 'UCB', 'EECS', '12-13')
 # reports dictionary example:
 #	
 # reports = { 'EECS-UCB' : { 	'raw request'  : '<html>The request response</html>',

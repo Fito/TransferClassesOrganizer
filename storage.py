@@ -4,17 +4,17 @@ from models.major import *
 
 class Storage():
 	def __init__(self, file_name):
-		self.file = file_name
+		self.file_name = file_name
 	
 	def encode_object(self, obj):
 		if isinstance(obj, User):			
-			return {'__user__'			 				: True, 
+			return {'__user__'			 				: 'true', 
 							'current_schools'				: obj.current_schools,
 							'current_schools_codes' : obj.current_schools_codes,
 							'majors'							 	: obj.majors,
 							'classes_taken'				  : obj.classes_taken}
 		elif isinstance(obj, Major):
-			return {"__major__"					: True, 
+			return {"__major__"					: 'true', 
 							"name"						  : obj.name,					
 							"school"					  : obj.school, 					
 							"code" 							: obj.code,					
@@ -26,9 +26,9 @@ class Storage():
 		if '__user__' in dct:
 			user = User()
 			user.current_schools = dct['current_schools']
-			user.curret_schools_codes = dct['current_schools_codes']
+			user.current_schools_codes = dct['current_schools_codes']
 			majors = dct['majors']
-			user.majors = []		
+			user.majors = []
 			for major in majors:
 				if '__major__' in major:
 					m = Major(major["name"], major["school"])
@@ -41,24 +41,15 @@ class Storage():
 		return dct
 	
 	def store(self, obj):
-		f = open('user_info.json', "w")
+		f = open(self.file_name, "r+w")
 		json.dump(obj, f, default=self.encode_object)
 		f.close()		
-
+		
 	def build_from_file(self, obj):
-		f = open('user_info.json')
-		if isinstance(obj, User):
-			return json.load(f, object_hook=self.as_user)
-		f.close()		
-	
-	
-user = User()
-user.current_schools = ['A', 'B']
-major = Major("Biochemical Engineering", "UC Davis")
-user.majors = [major]
-
-storage = Storage('user_info.json')
-storage.store(user)
-# storage.store(major)
-user = storage.build_from_file(User())
-print user.majors[0].school
+		f = open(self.file_name, "r")
+		f_str = f.read()
+		f.close()
+		if len(f_str) > 0:
+			loaded_obj = json.loads(f_str, object_hook=self.as_user)
+			return loaded_obj
+		return obj
