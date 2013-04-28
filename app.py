@@ -1,4 +1,7 @@
-try: 
+# The program doesn't work on Python 3
+# - importing libraries doesn't work (different syntax?), this breaks assist_ninja.py
+# - storage.py breaks when python 3
+try: 	
 	# default python should be 3
 	from tkinter import *
 except ImportError:
