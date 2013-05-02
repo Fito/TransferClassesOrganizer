@@ -8,10 +8,10 @@ except ImportError:
 import time
 from models.major import *
 from models.user import *
-from lib.assist_ninja import *
+        #from lib.assist_ninja import *
 from views.gui import *
 
-ninja = AssistNinja()
+        #ninja = AssistNinja()
 user = User()
 # user.add_current_school("Laney")
 # user.add_class_taken("Laney", "MATH 3A")
@@ -51,7 +51,7 @@ def add_class(school, classes_taken_list, form, classes_required_lists):
 	user.add_class_taken(school, item)
 
 def render_classes_taken_table(table):
-	print "classes taken table rendered"
+	print("classes taken table rendered")
 	#erase list and re render with updated bindings
 	if len(table.winfo_children()) > 1:
 		for w in table.winfo_children()[1].winfo_children():
@@ -66,7 +66,7 @@ def render_classes_taken_table(table):
 	clear_info_area()
 
 	if not user.has_majors():
-		print "No majors, so no bindings"
+		print("No majors, so no bindings")
 		form = FormFrame(list_frame.frame)
 		form.add_field("Add class:")
 		form.add_button("Add", lambda : add_class(school, list_frame, form, []))
