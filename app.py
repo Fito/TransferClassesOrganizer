@@ -11,6 +11,7 @@ except ImportError:
 # Import the project files
 from models.major import *
 from models.user import *
+<<<<<<< HEAD
 from lib.assist_ninja import *
 from storage import *
 from views.gui import *
@@ -22,6 +23,17 @@ ninja = AssistNinja()
 # build an User object from the user_info.json file or creates a new one if file is empty
 user = storage.build_from_file(User())
 # create Tkinter's root
+=======
+        #from lib.assist_ninja import *
+from views.gui import *
+
+        #ninja = AssistNinja()
+user = User()
+# user.add_current_school("Laney")
+# user.add_class_taken("Laney", "MATH 3A")
+# user.add_class_taken("Laney", "MATH 3B")
+
+>>>>>>> 95e96a068310152c99dd2f332ddb57780d5cb97f
 root = Tk()
 
 # create MainWindow object, which is nested into root
@@ -82,8 +94,13 @@ def delete_class(classes_taken_list):
 		inform_user_error("No item selected")
 
 def render_classes_taken_table(table):
+<<<<<<< HEAD
 	# Renders the classes taken list with updated values
 	# It removes the existing content content of the table
+=======
+	print("classes taken table rendered")
+	#erase list and re render with updated bindings
+>>>>>>> 95e96a068310152c99dd2f332ddb57780d5cb97f
 	if len(table.winfo_children()) > 1:
 		for w in table.winfo_children():
 			w.pack_forget()
@@ -102,6 +119,10 @@ def render_classes_taken_table(table):
 	clear_info_area()
 	# If the user has not added a major yet, it creates a form for adding classes without listener lists
 	if not user.has_majors():
+<<<<<<< HEAD
+=======
+		print("No majors, so no bindings")
+>>>>>>> 95e96a068310152c99dd2f332ddb57780d5cb97f
 		form = FormFrame(list_frame.frame)
 		form.add_field("Add class:")
 		form.add_button("Add", lambda : add_class(school, list_frame, form, []))
