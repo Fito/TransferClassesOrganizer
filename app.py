@@ -38,12 +38,12 @@ def clear_info_area():
 	info_area.config(text="")
 
 def inform_user_error(content):
-	# Informs displays a message on the info area, in color red
+	# Displays a message on the info area, in color red
 	info_area.config(text=content, font=("Arial", 18, 'bold'), fg='red')
 	root.update()
 
 def inform_user_action(content):
-	# Informs displays a message on the info area, in color green
+	# Displays a message on the info area, in color green
 	info_area.config(text=content, font=("Arial", 18, 'bold'), fg='green')
 	root.update()
 
@@ -89,7 +89,7 @@ def render_classes_taken_table(table):
 			w.pack_forget()
 		Label(current_table, text="Curret School:", font=('Arial', 21, 'bold')).pack(side=TOP, fill=X, pady=10)
 	
-	# It creates a new frame nested into the table		
+	# It creates a new frame nested into the table
 	school = user.current_schools[0]
 	frame = Frame(table)
 	frame.pack()
@@ -115,7 +115,7 @@ def render_classes_required_table(parent_table, classes_taken_frame):
 			# It creates a frame nested in the parent_table
 			title_frame = Frame(parent_table)
 			title_frame.pack()
-			# Title with major and school name
+			# It creates a title with major and school name
 			Label(title_frame, text=(major.name + " - " + major.school_code)).pack()
 			classes_required_lists = []
 
@@ -142,7 +142,7 @@ def render_classes_required_table(parent_table, classes_taken_frame):
 		form.pack()
 	clear_info_area()
 
-#Classes taken list is empty until school is create by add_school_handler
+#Classes taken list is empty until school is created by add_school_handler
 def add_school_handler(form, form_parent):
 	clear_info_area()
 	user.add_current_school(form.entries[0].get())

@@ -18,8 +18,7 @@ class MainWindow():
 
 class ListFrame():
 	""" List Frame: Wrapper class for Tk frames that hold a title and a list. 
-			The constructor's parameters are a parent frame, a title, an items list
-	 		and a boolean to determine the use of a delete button """
+			The constructor's parameters are a parent frame, a title, and an items list """
 
 	def __init__(self, parent, title, items_list):
 		frame = self.frame = Frame(parent, bd=2, relief='ridge', padx=5, pady=5)

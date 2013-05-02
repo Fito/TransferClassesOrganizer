@@ -58,7 +58,6 @@ class AssistNinja():
 		for report in self.reports.keys():
 			self.reports[report]['groups'] = extract_groups(self.reports[report]['raw request'])
 	
-	
 	def extract_reports_courses_and_titles(self):
 		for report in self.reports.keys():
 			self.reports[report]['all_courses'] = []
