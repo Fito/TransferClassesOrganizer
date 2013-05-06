@@ -24,28 +24,17 @@ class ListFrame():
 		frame = self.frame = Frame(parent, bd=2, relief='ridge', padx=5, pady=5)
 		
 		self.items_list = items_list
-<<<<<<< HEAD
-		self.list_box = Listbox(self.frame, width=20, height=len(self.items_list), relief=GROOVE)
-=======
 		self.list_and_scroll = Frame(self.frame)
 		self.list_box = Listbox(self.list_and_scroll, width=20, height=5, relief='ridge')
 		self.list_and_scroll.pack()                
 		self.sb = Scrollbar(self.list_and_scroll, orient=VERTICAL)
 		self.sb.configure(command=self.list_box.yview)
 		self.list_box.configure(yscrollcommand=self.sb.set)
->>>>>>> 95e96a068310152c99dd2f332ddb57780d5cb97f
-		
 		self.title = Label(self.frame, text=title).pack(padx=10, pady=5)
 		self.populate_list(self.items_list).pack(padx=10, pady=5, side=LEFT)
-
-<<<<<<< HEAD
-=======
-		if delete_button:
-			Button(self.frame, text="Delete selected", command=self.delete_selected_item).pack()
-
+		
 	def add_scrollbar(self):
 		self.sb.pack(side=RIGHT, fill=Y)
->>>>>>> 95e96a068310152c99dd2f332ddb57780d5cb97f
 		
 	def populate_list(self, items_list):
 		self.list_box.delete(0, END)
