@@ -4,9 +4,11 @@ from models.major import *
 
 class Storage():
 	def __init__(self, file_name):
+	  # It stores its file's name
 		self.file_name = file_name
 	
 	def encode_object(self, obj):
+	  # It converts the passed object to json format
 		if isinstance(obj, User):			
 			return {'__user__'			 				: 'true', 
 							'current_schools'				: obj.current_schools,
@@ -23,6 +25,8 @@ class Storage():
 		raise TypeError(repr(obj) + " is not JSON serializable")
 	
 	def as_user(self, dct):
+	  # It builds a User object from the file's data
+	  # It builds Majors objects if present
 		if '__user__' in dct:
 			user = User()
 			user.current_schools = dct['current_schools']
@@ -41,11 +45,14 @@ class Storage():
 		return dct
 	
 	def store(self, obj):
+		# It writes the passed object into the file 
 		f = open(self.file_name, "r+w")
 		json.dump(obj, f, default=self.encode_object)
 		f.close()		
 		
 	def build_from_file(self, obj):
+	  # It reads the file and builds a User from it
+	  # It returns a new user if the file is empty
 		f = open(self.file_name, "r")
 		f_str = f.read()
 		f.close()
